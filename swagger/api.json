@@ -1,0 +1,761 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "S&BのReact向けのAPI仕様",
+    "version": "1.0.0",
+    "title": "S&B API仕様書",
+    "contact": {
+      "email": "asami.otsu@nijibox.co.jp"
+    }
+  },
+  "host": "development",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "campaign",
+      "description": "キャンペーン関連のAPI"
+    },
+    {
+      "name": "chain",
+      "description": "チェーン関連のAPI"
+    },
+    {
+      "name": "prize",
+      "description": "景品関連のAPI"
+    },
+    {
+      "name": "pickup",
+      "description": "対象商品"
+    },
+    {
+      "name": "apply",
+      "description": "応募登録関連"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/campaigns": {
+      "get": {
+        "tags": [
+          "campaign"
+        ],
+        "summary": "登録されているすべてのキャンペーン情報を返す",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Campaign"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaigns/{campaignId}": {
+      "get": {
+        "tags": [
+          "campaign"
+        ],
+        "summary": "入力されたIDのキャンペーン情報を返す",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaignId",
+            "description": "src/config/Config.tsで定義してるCAMPAIGN_CODE",
+            "type": "string",
+            "required": true,
+            "format": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Campaign"
+            }
+          }
+        }
+      }
+    },
+    "/chains": {
+      "get": {
+        "tags": [
+          "chain"
+        ],
+        "summary": "登録されているすべてのチェーンを返す",
+        "description": "Returns all chain",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Chain"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaigns/{campaignId}/chains/{chainId}": {
+      "get": {
+        "tags": [
+          "chain"
+        ],
+        "summary": "チェーン情報を１件返す",
+        "description": "キャンペーンID・チェーンIDから該当のチェーン情報を１件返す",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaignId",
+            "description": "キャンペーンID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "chainId",
+            "in": "path",
+            "description": "チェーンIDはURLから取得する",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Chain"
+            }
+          }
+        }
+      }
+    },
+    "/prize/{prizeId}": {
+      "get": {
+        "tags": [
+          "prize"
+        ],
+        "summary": "ID指定された景品情報を返す",
+        "description": "使わない",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "prizeId",
+            "description": "景品のID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Prize"
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/campaigns/{campaignId}/prize": {
+      "get": {
+        "tags": [
+          "prize"
+        ],
+        "summary": "キャンペーンに登録されているすべての景品を返す",
+        "description": "使わない",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "src/config/Config.tsで定義してるCAMPAIGN_CODE",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Prize"
+              }
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/campaigns/{campaignId}/chains/{chainId}/prize": {
+      "get": {
+        "tags": [
+          "prize"
+        ],
+        "summary": "景品情報を返す",
+        "description": "キャンペーンID・チェーンIDから該当の景品情報を返す",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "src/config/Config.tsで定義してるCAMPAIGN_CODE",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "chainId",
+            "in": "path",
+            "description": "チェーンIDはURLから取得する",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TargetPrize"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaigns/{campaignId}/chains/{chainId}/pickup": {
+      "get": {
+        "tags": [
+          "pickup"
+        ],
+        "summary": "対象商品情報を返す",
+        "description": "キャンペーンID・チェーンIDから該当の対象商品情報を返す",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "src/config/Config.tsで定義してるCAMPAIGN_CODE",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "chainId",
+            "in": "path",
+            "description": "チェーンIDはURLから取得する",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PickupItem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apply": {
+      "post": {
+        "tags": [
+          "apply"
+        ],
+        "summary": "応募情報登録",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "入力情報",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Apply"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid value",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/apply/validate": {
+      "post": {
+        "tags": [
+          "apply"
+        ],
+        "summary": "入力情報のバリデーションチェックする",
+        "description": "入力情報のバリデーションチェックする。登録処理はしない",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "入力情報",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Apply"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid value",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/uploadImage": {
+      "post": {
+        "tags": [
+          "apply"
+        ],
+        "summary": "画像をアップロードする",
+        "description": "入力された画像をGCPにアップロードする",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "入力情報",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "receipt": {
+                  "type": "string",
+                  "example": "XXXX.png"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid value",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "petstore_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+      "flow": "implicit",
+      "scopes": {
+        "write:pets": "modify pets in your account",
+        "read:pets": "read your pets"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "Campaign": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "name": {
+          "type": "string",
+          "example": "【S&B】夏のキャンペーン"
+        },
+        "headerImage": {
+          "type": "string",
+          "example": "XXXX.png"
+        },
+        "logo": {
+          "type": "string",
+          "example": "XXXX.png"
+        },
+        "overview": {
+          "type": "string",
+          "example": "gaiyou"
+        },
+        "startDate": {
+          "type": "string",
+          "example": "2019/04/01 10:00:00"
+        },
+        "endDate": {
+          "type": "string",
+          "example": "2019/04/30 10:00:00"
+        },
+        "serverDate": {
+          "type": "string",
+          "example": "2019/04/25 10:00:00"
+        }
+      }
+    },
+    "Chain": {
+      "type": "object",
+      "required": [
+        "id",
+        "campaignId",
+        "chainId"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "campaignId": {
+          "type": "integer",
+          "example": "1"
+        },
+        "chainId": {
+          "type": "string",
+          "example": "marutaka"
+        },
+        "name": {
+          "type": "string",
+          "example": "まるたか"
+        },
+        "logo": {
+          "type": "string",
+          "example": "companyLogoImage.png"
+        },
+        "startDate": {
+          "type": "string",
+          "example": "2019/04/01 10:00:00"
+        },
+        "endDate": {
+          "type": "string",
+          "example": "2019/04/30 10:00:00"
+        },
+        "receiptStartDate": {
+          "type": "string",
+          "example": "2019/03/11 10:00:00"
+        },
+        "receiptEndDate": {
+          "type": "string",
+          "example": "2019/04/29 10:00:00"
+        },
+        "prizeNum": {
+          "type": "integer",
+          "example": "3"
+        },
+        "targetPurchaseAmount": {
+          "type": "integer",
+          "example": "2000"
+        },
+        "targetPurchaseNum": {
+          "type": "integer",
+          "example": "2"
+        }
+      }
+    },
+    "Prize": {
+      "type": "object",
+      "required": [
+        "campaignId",
+        "name",
+        "image1"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "campaignId": {
+          "type": "integer",
+          "example": "1"
+        },
+        "name1": {
+          "type": "string",
+          "example": "景品名1"
+        },
+        "name2": {
+          "type": "string",
+          "example": "景品名2"
+        },
+        "name3": {
+          "type": "string",
+          "example": "景品名3"
+        },
+        "image1": {
+          "type": "string",
+          "example": "XXXX1.png"
+        },
+        "image2": {
+          "type": "string",
+          "example": "XXXX2.png"
+        },
+        "image3": {
+          "type": "string",
+          "example": "XXXX3.png"
+        },
+        "description": {
+          "type": "string",
+          "example": "desc"
+        }
+      }
+    },
+    "TargetPrize": {
+      "type": "object",
+      "required": [
+        "photoUrls"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "campaignId": {
+          "type": "integer",
+          "example": "1"
+        },
+        "chainId": {
+          "type": "string",
+          "example": "marutaka"
+        },
+        "name1": {
+          "type": "string",
+          "example": "景品名1"
+        },
+        "name2": {
+          "type": "string",
+          "example": "景品名2"
+        },
+        "name3": {
+          "type": "string",
+          "example": "景品名3"
+        },
+        "image1": {
+          "type": "string",
+          "example": "XXXX1.png"
+        },
+        "image2": {
+          "type": "string",
+          "example": "XXXX2.png"
+        },
+        "image3": {
+          "type": "string",
+          "example": "XXXX3.png"
+        },
+        "description": {
+          "type": "string",
+          "example": "desc"
+        },
+        "winingNum": {
+          "type": "integer",
+          "example": "100"
+        }
+      }
+    },
+    "PickupItem": {
+      "type": "object",
+      "required": [
+        "name",
+        "image"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "campaignId": {
+          "type": "integer",
+          "example": "1"
+        },
+        "chainId": {
+          "type": "string",
+          "example": "marutaka"
+        },
+        "name": {
+          "type": "string",
+          "example": "ピックアップ商品"
+        },
+        "image": {
+          "type": "string",
+          "example": "XXXX.png"
+        }
+      }
+    },
+    "Apply": {
+      "type": "object",
+      "required": [
+        "campaignId",
+        "chainId",
+        "name",
+        "kana",
+        "gender",
+        "aeg",
+        "postalCode",
+        "address",
+        "prizeId",
+        "receipt"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "campaignId": {
+          "type": "integer",
+          "example": "1"
+        },
+        "chainId": {
+          "type": "string",
+          "example": "marutaka"
+        },
+        "name": {
+          "type": "string",
+          "example": "山田太郎"
+        },
+        "kana": {
+          "type": "string",
+          "example": "ヤマダタロウ"
+        },
+        "gender": {
+          "type": "string",
+          "example": "男性"
+        },
+        "age": {
+          "type": "integer",
+          "example": "2"
+        },
+        "postalCode": {
+          "type": "string",
+          "example": "104-0054"
+        },
+        "prefecture": {
+          "type": "string",
+          "example": "1"
+        },
+        "address": {
+          "type": "string",
+          "example": "中央区勝どき１丁目１３−１ 4F イヌイビル・カチドキ"
+        },
+        "tel": {
+          "type": "string",
+          "example": "0311111111"
+        },
+        "prizeId": {
+          "type": "integer",
+          "example": "1"
+        },
+        "receiprt": {
+          "type": "string",
+          "example": "画像パス"
+        },
+        "receiptTel": {
+          "type": "string",
+          "example": "0311111111"
+        },
+        "receiptPurchaseAt": {
+          "type": "string",
+          "example": ""
+        },
+        "status": {
+          "type": "integer",
+          "example": "1"
+        },
+        "reason": {
+          "type": "integer",
+          "example": "1"
+        },
+        "memo": {
+          "type": "string",
+          "example": "めも"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "object",
+          "properties": {
+            "inputFieldName": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "フリガナは全角カタカナで入力してください"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

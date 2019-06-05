@@ -1,0 +1,52 @@
+version: '3'
+services:
+  app:
+    #app_goの中にあるDockerfileの読み込み
+    build: ./app_go
+    depends_on:
+      - mysql
+    container_name: "app_go"
+    tty: true
+    ports:
+      - "8080:8080"
+    #ホストのディレクトリをコンテナにマウント
+    volumes:
+      - ./app_go/app:/go/src/app
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      #GOPATH=/go
+  mysql:
+    build: ./mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  # swagger
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    container_name: "swagger-editor"
+    ports:
+      - "8081:8080"
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./swagger/api.json:/api.json
+    environment:
+      SWAGGER_JSON: /api.json
+      # API_URL: ""
+volumes:
+  mysql-data:
