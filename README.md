@@ -1,6 +1,6 @@
 # 使い方
 ```
-dc up -d
+docker-compose up -d
 ```
 localhost:8080
   - web
